@@ -1,0 +1,22 @@
+{
+  "name": "fitbit-flex",
+  "version": "0.0.0",
+  "description": "a sdk of fitbit-flex",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/turingou/fitbit-flex.git"
+  },
+  "keywords": [
+    "fitbit",
+    "flex"
+  ],
+  "author": "turing",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/turingou/fitbit-flex/issues"
+  }
+}
