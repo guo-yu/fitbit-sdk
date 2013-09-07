@@ -1,6 +1,7 @@
 {
   "name": "fitbit-flex",
   "version": "0.0.0",
+  "logo": "http://ww1.sinaimg.cn/large/61ff0de3gw1e8e02zagsnj201901n742.jpg",
   "description": "a sdk of fitbit-flex",
   "main": "index.js",
   "scripts": {
