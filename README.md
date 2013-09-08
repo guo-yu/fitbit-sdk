@@ -1,17 +1,17 @@
-## ![logo](http://ww1.sinaimg.cn/large/61ff0de3gw1e8e02zagsnj201901n742.jpg) fitbit-flex ![npm](https://badge.fury.io/js/fitbit-flex.png)
+## ![logo](http://ww1.sinaimg.cn/large/61ff0de3gw1e8e02zagsnj201901n742.jpg) fitbit-sdk ![npm](https://badge.fury.io/js/fitbit-sdk.png)
 
-a sdk of fitbit-flex by [turing](https://npmjs.org/~turing) 
+a developer friendly node.js sdk of fitbit by [turing](https://npmjs.org/~turing) 
 
 ### Installation
 ````
-$ npm install fitbit-flex
+$ npm install fitbit-sdk
 // or install globally
-$ sudo npm install fitbit-flex -g
+$ sudo npm install fitbit-sdk -g
 ````
 
 ### Example
 ````javascript
-var fitbit-flex = require('fitbit-flex');
+var fitbit = require('fitbit-sdk');
 ````
 
 ### API

@@ -1,23 +1,26 @@
 {
-  "name": "fitbit-flex",
+  "name": "fitbit-sdk",
   "version": "0.0.0",
   "logo": "http://ww1.sinaimg.cn/large/61ff0de3gw1e8e02zagsnj201901n742.jpg",
-  "description": "a sdk of fitbit-flex",
+  "description": "a developer friendly node.js sdk of fitbit",
   "main": "index.js",
+  "author": "turing",
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/turingou/fitbit-flex.git"
+    "url": "https://github.com/turingou/fitbit-sdk.git"
   },
   "keywords": [
     "fitbit",
     "flex"
   ],
-  "author": "turing",
-  "license": "MIT",
+  "dependencies": {
+    "beer":"*"
+  },
   "bugs": {
-    "url": "https://github.com/turingou/fitbit-flex/issues"
+    "url": "https://github.com/turingou/fitbit-sdk/issues"
   }
 }
