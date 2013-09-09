@@ -8,7 +8,8 @@
 // @author: [turingou](http://guoyu.me)
 
 var API = require('./api'),
-    User = request('./api/user');
+    user = require('./api/user'),
+    device = require('./api/device');
 
 var Fitbit = function(params) {
     this.key = params.key;
@@ -18,18 +19,13 @@ var Fitbit = function(params) {
         auth: 'https://www.fitbit.com/'
     };
     // api sets
-    Fitbit.prototype.user = new User(this);
-    Fitbit.prototype.body = new API('body',this);
-    Fitbit.prototype.activity = new API('activity',this);
-    Fitbit.prototype.sleep = new API('sleep',this);
-    Fitbit.prototype.heart = new API('heart',this);
-    Fitbit.prototype.bp = new API('bp',this);
-    Fitbit.prototype.bloodPressure = new API('bloodPressure',this);
-    Fitbit.prototype.glucose = new API('glucose',this);
-    Fitbit.prototype.foods = new API('foods',this);
-    Fitbit.prototype.water = new API('water',this);
-    Fitbit.prototype.datapoint = new API('datapoint',this);
-    Fitbit.prototype.key = new API('key',this);
+    Fitbit.prototype.auth = new auth(this);
+    Fitbit.prototype.user = new user(this);
+    Fitbit.prototype.device = new device(this);
+};
+
+Fitbit.prototype.token = function() {
+    return this.token;
 };
 
 module.exports = Fitbit;
