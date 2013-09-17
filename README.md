@@ -5,8 +5,6 @@ a developer friendly node.js sdk of fitbit by [turing](https://npmjs.org/~turing
 ### Installation
 ````
 $ npm install fitbit-sdk
-// or install globally
-$ sudo npm install fitbit-sdk -g
 ````
 
 ### Example
