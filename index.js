@@ -11,11 +11,13 @@ var sdk = require('sdk'),
     apis = require('./apis');
 
 var Fitbit = function(params) {
-    var oauth = this;
-    this.key = params.key;
+    this.key = params.key ? params.key : null;
+    this.redirect = params.redirect ? params.redirect : '';
     this.version = '1';
     this.server = 'https://api.fitbit.com/' + this.version;
-    oauth.server = 'http://www.fitbit.com';
+    this.oauthServer = 'http://www.fitbit.com';
+    var oauth = this;
+    oauth.server = oauth.oauthServer;
     Fitbit.prototype.token = new sdk(apis.token, oauth);
     Fitbit.prototype.user = new sdk(apis.user, this);
     Fitbit.prototype.goal = new sdk(apis.goal, this);
@@ -36,5 +38,61 @@ var Fitbit = function(params) {
     Fitbit.prototype.alarm = new sdk(apis.alarm, this);
     Fitbit.prototype.water = new sdk(apis.water, this);
 };
+
+// express middleware: fetch oauth token and redirect to auth page
+Fitbit.prototype.auth = function(req, res, next) {
+    var self = this;
+    self.token.request({
+        form: {
+            oauth_callback: self.redirect,
+            oauth_consumer_key: self.key,
+            oauth_nonce: '123',
+            oauth_signature: '123',
+            oauth_signature_method: 'HMAC-SHA1',
+            oauth_timestamp: '123',
+            oauth_version: '1.0'
+        }
+    }, function(err, result, s) {
+        s['request_token'] = result.body;
+        if (!err) {
+            var request_token = result.body;
+            res.redirect(self.oauthServer + apis.token.authPage.url + '?oauth_token=' + request_token);
+        } else {
+            next(err);
+        }
+    });
+}
+
+// express middleware: fetch access token
+Fitbit.prototype.access = function(req, res, next) {
+    var oauth_token = req.query.oauth_token,
+        oauth_verifier = req.query.oauth_verifier,
+        self = this;
+    if (oauth_token && oauth_verifier) {
+        self.token.access({
+            form: {
+                oauth_consumer_key: self.key,
+                oauth_token: oauth_token,
+                oauth_nonce: '123',
+                oauth_signature: '123',
+                oauth_signature_method: 'HMAC-SHA1',
+                oauth_timestamp: '123',
+                oauth_verifier: oauth_verifier,
+                oauth_version: '1.0'
+            }
+        }, function(err, result, s) {
+            s['request_token'] = result.body;
+            if (!err) {
+                var access_token = result.body;
+                res.locals['access_token'] = access_token;
+                next();
+            } else {
+                next(err);
+            }
+        });
+    } else {
+        res.redirect('/');
+    }
+}
 
 module.exports = Fitbit;

@@ -8,6 +8,9 @@ module.exports = {
         access: {
             method: 'post',
             url: '/oauth/access_token'
+        },
+        authPage: {
+            url: '/oauth/authorize'
         }
     },
     user: {
