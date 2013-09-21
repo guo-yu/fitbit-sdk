@@ -8,7 +8,8 @@
 // @author: [turingou](http://guoyu.me)
 
 var sdk = require('sdk'),
-    apis = require('./apis');
+    apis = require('./apis'),
+    token = require('./token');
 
 var Fitbit = function(params) {
     this.key = params.key ? params.key : null;
@@ -53,9 +54,9 @@ Fitbit.prototype.auth = function(req, res, next) {
             oauth_version: '1.0'
         }
     }, function(err, result, s) {
-        s['request_token'] = result.body;
         if (!err) {
-            var request_token = result.body;
+            var request_token = token.parse(result.body).oauth_token;
+            s['request_token'] = request_token;
             res.redirect(self.oauthServer + apis.token.authPage.url + '?oauth_token=' + request_token);
         } else {
             next(err);
@@ -81,9 +82,9 @@ Fitbit.prototype.access = function(req, res, next) {
                 oauth_version: '1.0'
             }
         }, function(err, result, s) {
-            s['request_token'] = result.body;
             if (!err) {
-                var access_token = result.body;
+                var access_token = token.parse(result.body).oauth_token;
+                s['access_token'] = result.body;
                 res.locals['access_token'] = access_token;
                 next();
             } else {
