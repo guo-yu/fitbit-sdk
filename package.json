@@ -18,7 +18,7 @@
     "flex"
   ],
   "dependencies": {
-  "sdk": "*"
+    "sdk": "*"
   },
   "bugs": {
     "url": "https://github.com/turingou/fitbit-sdk/issues"

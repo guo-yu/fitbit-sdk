@@ -1,7 +1,13 @@
+// api routers
 module.exports = {
-    auth: {
-        token: {
-            url: 'demo'
+    token: {
+        request: {
+            method: 'post',
+            url: '/oauth/request_token'
+        },
+        access: {
+            method: 'post',
+            url: '/oauth/access_token'
         }
     },
     user: {
@@ -78,7 +84,7 @@ module.exports = {
             method: 'delete',
             url: '/user/-/body/log/fat/{{id}}.json'
         }
-    }
+    },
     activity: {
         read: {
             url: '/user/-/activities/date/{{date}}.json'
@@ -86,9 +92,9 @@ module.exports = {
         // THIS IS A ugly hack
         readGoal: {
             url: '/user/-/activities/goals/{{date}}.json'
-        }
+        },
         updateGoal: {
-            method: 'post'
+            method: 'post',
             url: '/user/-/activities/goals/{{date}}.json'
         },
         remove: {
@@ -136,7 +142,7 @@ module.exports = {
     },
     glucose: {
         read: {
-            '/user/-/glucose/date/{{date}}.json'
+            url: '/user/-/glucose/date/{{date}}.json'
         },
         update: {
             method: 'post',
@@ -158,7 +164,7 @@ module.exports = {
     },
     water: {
         read: {
-            '/user/-/foods/log/water/date/{{date}}.json'
+            url: '/user/-/foods/log/water/date/{{date}}.json'
         },
         update: {
             method: 'post',

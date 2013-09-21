@@ -9,7 +9,11 @@ $ npm install fitbit-sdk
 
 ### Example
 ````javascript
-var fitbit = require('fitbit-sdk');
+var Fitbit = require('fitbit-sdk');
+
+var fitbit = new Fitbit({
+    key: '12345678'
+});
 ````
 
 ### API
