@@ -53,11 +53,10 @@ Fitbit.prototype.auth = function(req, res, next) {
     });
     self.token.request({
         form: oauthParams
-    }, function(err, result, s) {
+    }, function(err, result) {
         if (!err) {
             if (result.body.indexOf('oauth_token') > -1 && result.body.indexOf('oauth_verifier') > -1) {
                 var request_token = token.parse(result.body);
-                s['request_token'] = request_token;
                 res.redirect(self.oauthServer + apis.token.authPage.url + '?oauth_token=' + request_token.oauth_token);
             } else {
                 next(new Error('fail to fetch request_token'));
@@ -84,11 +83,10 @@ Fitbit.prototype.access = function(req, res, next) {
         });
         self.token.access({
             form: oauthParams
-        }, function(err, result, s) {
+        }, function(err, result) {
             if (!err) {
                 if (result.body.indexOf('encoded_user_id') > -1 && result.body.indexOf('oauth_token') > -1) {
                     var access_token = token.parse(result.body);
-                    s['access_token'] = access_token;
                     res.locals.fitbit = access_token;
                 }
                 next();
@@ -97,7 +95,6 @@ Fitbit.prototype.access = function(req, res, next) {
             }
         });
     } else {
-        // oauth_token not given
         next();
     }
 }

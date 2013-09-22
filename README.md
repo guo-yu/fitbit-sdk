@@ -12,7 +12,32 @@ $ npm install fitbit-sdk
 var Fitbit = require('fitbit-sdk');
 
 var fitbit = new Fitbit({
-    key: '12345678'
+    key: '12345678',
+    redirect: 'http://mysite/callbackPage'
+});
+````
+use as Express Middleware for OAuth1.0
+````javascript
+// fetch request token and redirect user to auth page
+app.get('/auth', fitbit.auth);
+
+// parse access token (check res.locals.fitbit)
+app.get('/callbackPage', fitbit.access, myRouter)
+````
+use as api-collection
+````javascript
+fitbit.user.read(function(err, result){
+    console.log(result.body);
+});
+
+fitbit.user.update({
+    name: '123'
+},function(err, result){
+    console.log(result.body);
+});
+
+fitbit.device.list(function(err, result){
+    console.log(result.body);
 });
 ````
 
