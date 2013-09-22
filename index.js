@@ -8,8 +8,9 @@
 // @author: [turingou](http://guoyu.me)
 
 var sdk = require('sdk'),
+    author = require('author'),
     apis = require('./apis'),
-    token = require('./token');
+    token = author.token;
 
 var Fitbit = function(params) {
     this.key = params.key ? params.key : null;
@@ -43,21 +44,24 @@ var Fitbit = function(params) {
 // express middleware: fetch oauth token and redirect to auth page
 Fitbit.prototype.auth = function(req, res, next) {
     var self = this;
+    var oauthParams = author.oauth1({
+        method: apis.token.request.method,
+        url: self.oauthServer + apis.token.request.url
+    },{
+        oauth_callback: self.redirect,
+        oauth_consumer_key: self.key,
+    });
     self.token.request({
-        form: {
-            oauth_callback: self.redirect,
-            oauth_consumer_key: self.key,
-            oauth_nonce: '123',
-            oauth_signature: '123',
-            oauth_signature_method: 'HMAC-SHA1',
-            oauth_timestamp: '123',
-            oauth_version: '1.0'
-        }
+        form: oauthParams
     }, function(err, result, s) {
         if (!err) {
-            var request_token = token.parse(result.body).oauth_token;
-            s['request_token'] = request_token;
-            res.redirect(self.oauthServer + apis.token.authPage.url + '?oauth_token=' + request_token);
+            if (result.body.indexOf('oauth_token') > -1 && result.body.indexOf('oauth_verifier') > -1) {
+                var request_token = token.parse(result.body);
+                s['request_token'] = request_token;
+                res.redirect(self.oauthServer + apis.token.authPage.url + '?oauth_token=' + request_token.oauth_token);
+            } else {
+                next(new Error('fail to fetch request_token'));
+            }
         } else {
             next(err);
         }
@@ -70,29 +74,31 @@ Fitbit.prototype.access = function(req, res, next) {
         oauth_verifier = req.query.oauth_verifier,
         self = this;
     if (oauth_token && oauth_verifier) {
+        var oauthParams = author.oauth1({
+            method: apis.token.access.method,
+            url: self.oauthServer + apis.token.access.url
+        },{
+            oauth_consumer_key: self.key,
+            oauth_token: oauth_token,
+            oauth_verifier: oauth_verifier
+        });
         self.token.access({
-            form: {
-                oauth_consumer_key: self.key,
-                oauth_token: oauth_token,
-                oauth_nonce: '123',
-                oauth_signature: '123',
-                oauth_signature_method: 'HMAC-SHA1',
-                oauth_timestamp: '123',
-                oauth_verifier: oauth_verifier,
-                oauth_version: '1.0'
-            }
+            form: oauthParams
         }, function(err, result, s) {
             if (!err) {
-                var access_token = token.parse(result.body).oauth_token;
-                s['access_token'] = result.body;
-                res.locals['access_token'] = access_token;
+                if (result.body.indexOf('encoded_user_id') > -1 && result.body.indexOf('oauth_token') > -1) {
+                    var access_token = token.parse(result.body);
+                    s['access_token'] = access_token;
+                    res.locals.fitbit = access_token;
+                }
                 next();
             } else {
                 next(err);
             }
         });
     } else {
-        res.redirect('/');
+        // oauth_token not given
+        next();
     }
 }
 
